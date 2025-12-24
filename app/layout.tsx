@@ -6,6 +6,8 @@ import { APP_NAME, APP_DESCRIPTION, SERVER_URL } from '@/lib/constants';
 import { ThemeProvider } from 'next-themes';
 
 
+
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -23,22 +25,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
-    
-
-
-    <html lang="en" suppressHydrationWarning>
-      
-         <body className={`${inter.className}`}> 
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='light'
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.className}`}>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='light'
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
+      </html>
   );
 }
