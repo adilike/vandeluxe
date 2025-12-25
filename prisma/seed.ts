@@ -2,6 +2,8 @@ import { PrismaClient, Prisma } from "../app/generated/prisma/client";
 import { PrismaPg } from '@prisma/adapter-pg'
 import 'dotenv/config'
 
+import { hashSync } from 'bcrypt-ts-edge'; // Import the hashSync function from the bcrypt-ts-edge library
+
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
 })
@@ -10,7 +12,22 @@ const prisma = new PrismaClient({
   adapter,
 });
 
-const userData: Prisma.ProductCreateInput[] = [
+const userData: Prisma.UserCreateInput[] = [
+  {
+      name: 'John',
+      email: 'admin@example.com',
+      password: hashSync('123456', 10),
+      role: 'admin',
+    },
+    {
+      name: 'Jane',
+      email: 'jane@example.com',
+      password: hashSync('123456', 10),
+      role: 'user',
+    },
+]
+
+const productData: Prisma.ProductCreateInput[] = [
  {
       name: 'Polo Sporting Stretch Shirt',
       slug: 'polo-sporting-stretch-shirt',
@@ -117,9 +134,19 @@ const userData: Prisma.ProductCreateInput[] = [
 
 export async function main() {
   await prisma.product.deleteMany();
-  for (const u of userData) {
+  await prisma.account.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.verificationToken.deleteMany();
+  await prisma.user.deleteMany();
+  
+  for (const u of productData) {
     await prisma.product.create({ data: u });
   }
+
+  for (const p of userData) {
+    await prisma.user.create({ data: p });
+  }
+
   console.log("Database seeded successfully");
 }
 
